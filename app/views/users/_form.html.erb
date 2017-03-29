@@ -1,0 +1,47 @@
+<%= form_for(user) do |f| %>
+  <% if user.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(user.errors.count, "error") %> prohibited this user from being saved:</h2>
+
+      <ul>
+      <% user.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <% User::CROP_AVATAR.each do |attr| %>
+    <%= f.hidden_field attr.to_sym, id: "user_#{attr}" %>
+  <% end %>
+  <div>
+    <%= f.label :name %>
+    <%= f.text_field :name %>
+    <br>
+    <br>
+    <div id="preview_avatar">
+      <% if f.object.avatar.present? %>
+        <%= f.hidden_field :avatar_cache %>
+        <%= image_tag f.object.avatar.medium.url, id: "preview_avatar" %>
+      <% else %>
+        <%= image_tag "fallback/no.jpg", id: "preview_avatar" %>
+      <% end %>
+    </div>
+    <br>
+    <%= f.label :avatar %>
+    <%= f.file_field :avatar %>
+    <br>
+  </div>
+  <br>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
+<div id="crop_avatar_popup" class="mfp-hide" style="display:none;">
+  <div id="popup">
+    <h2>Crop avatar</h2>
+    <div class="crop_image">
+      <img src="" id="user_avatar_crop" style="max-width: 100%;">
+      <%= submit_tag "Crop", id: "submit_crop" %>
+    </div>
+  </div>
+</div>
